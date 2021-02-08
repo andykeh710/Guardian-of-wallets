@@ -3,28 +3,36 @@ pragma solidity >=0.5.0 <0.8.0;
 contract Test{
     uint private count;
     address private owner;
+    // address public constant approver = 0x94C9081c3Fc6DDF2F25426af516F9af82fA0F4ae;
+    
 
     // events
-    event Increment();
+    // event Increment();
 
 
     constructor() public{
         owner = msg.sender;
+        
     }
 
     function increase() public returns (uint){
-        count = count + 2;
+        count +=1;
         return count;
-        emit Increment();
+        // emit Increment();
 
     }
 
-    function decrease() public{
+    function decrease() public returns (uint){
         count--;
+        return count; 
     }
 
     function getCount() public view returns (uint){
         return count;
+    }
+
+    function setCount(uint _count) public returns(uint){
+        count = _count;
     }
 
     //receive(encrypted seedphrase) push the encrypted word into the  smart contract

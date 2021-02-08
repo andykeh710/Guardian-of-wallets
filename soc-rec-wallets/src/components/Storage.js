@@ -59,7 +59,7 @@ export const sendToVault = async (web3) => {
     }
   }
 
-}
+    
 //export default ipfs;
 
 //const IPFS = require('ipfs-mini')

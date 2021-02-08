@@ -2,48 +2,62 @@ import React, {Component} from 'react';
 import './App.css';
 import Web3 from 'web3';
 import Test from '../abis/Test.json';
-import Encryption from './Encryption';
-import Rsa from './Rsa';
-import Wallet from './Wallet';
-
+import Counter from '../abis/Counter.json';
 
 class App extends Component{
+
+  constructor(props) {
+    super(props);
+    this.state = {count : 0}
+    this.increase = this.increase.bind(this)
+  }
+
   componentWillMount(){
     this.loadBlockchainData()
   }
 
+  // componentDidMount(){
+  // }
+
   async loadBlockchainData(){
-    const web3 = new Web3(window.ethereum)    
-    // const network = await web3.eth.net.getNetworkType()
+    const web3 = new Web3(window.ethereum)      
     const networkId = await web3.eth.net.getId()
-    // const accounts = await web3.eth.getAccounts()
-    const abi = Test.abi;
-    const address = Test.networks[networkId].address
-    const test = new web3.eth.Contract(abi, address)
-    const count = await test.methods.getCount().call()
-    //console.log("web3", ethereum)
-    console.log("count", count)
-    const increase = await test.methods.increase().call()
-    await test.events.Increment({}, (error, event) => {
-      console.log("event:",event.returnValues)
-    })
-    // Watch for MyEvent
-    // increase.MyEvent().watch((error, result) => {});
-    console.log("increase",increase)
-    console.log("count", count)
-
-    test.events.Increment({}, function(error, event){ console.log(event); })
-    .on("connected", function(subscriptionId){
-        console.log(subscriptionId);
-    })
-    .on('data', function(event){
-        console.log(event); // same results as the optional callback above
-    })
-    .on('error', function(error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-
-    });
+    // console.log("networkId", networkId)
+   
+    const accounts = await web3.eth.getAccounts()  
     
+    
+    const account = accounts[0]
+    if(!account) {
+      await window.ethereum.enable()
+    }
+    console.log("account", account)
+    this.setState({account: account})
+      
+    const abi = Counter.abi;
+    const address = await Counter.networks[networkId].address;
+    const counter = new web3.eth.Contract(abi, address)      
+    this.setState({contract:counter})
+    counter.events.ValueChanged({}, (error, event) => { 
+      console.log("event", event.returnValues)
+      //this.setState({e:event})
+    })
+  }
 
+  increase = async() => {
+    var _count = await this.state.contract.methods.getCount().call()
+    // console.log("inside increment(), count is ", _count)
+      await this.state.contract.methods.increment().send({ from: this.state.account})
+      // .on('transactionHash', (hash) => {
+      //   console.log(hash)
+      // })
+      // .on('error',(error) => {
+      //   console.error(error)
+      //   window.alert('There was an error!')
+      // })
+      // _count = await this.state.contract.methods.getCount().call()
+      this.setState({count : _count})
+      console.log("after increment(), count is ", _count)
   }
 
   render(){
@@ -51,10 +65,9 @@ class App extends Component{
       <div>
         <header>Social Recovery Wallet</header>
         <p>text goes here...</p>
-        <button>increase</button>
-        <p>{}</p>
-      </div>
-    )
+        <button onClick={this.increase}>Increase</button>
+        <p>The count is {this.state.count}</p>
+      </div>)
   }
 }
 

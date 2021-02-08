@@ -7,10 +7,10 @@
 
 pragma solidity >=0.5.0 <0.8.0;
 
-import "https://raw.githubusercontent.com/smartcontractkit/chainlink/master/evm-contracts/src/v0.6/VRFConsumerBase.sol";
+//import "https://raw.githubusercontent.com/smartcontractkit/chainlink/master/evm-contracts/src/v0.6/VRFConsumerBase.sol";
 
-contract RandomNumberConsumer is VRFConsumerBase {
-    
+contract RandomNumberConsumer {//is VRFConsumerBase {
+   /* 
     bytes32 internal keyHash;
     uint256 internal fee;
     
@@ -24,7 +24,7 @@ contract RandomNumberConsumer is VRFConsumerBase {
      * LINK token address:                0xa36085F69e2889c224210F603D836748e7dC0088
      * Key Hash: 0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4
      */
-    constructor() 
+   /* constructor() 
         VRFConsumerBase(
             0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9, // VRF Coordinator
             0xa36085F69e2889c224210F603D836748e7dC0088  // LINK Token
@@ -37,7 +37,7 @@ contract RandomNumberConsumer is VRFConsumerBase {
     /** 
      * Requests randomness from a user-provided seed
      */
-    function getRandomNumber(uint256 userProvidedSeed) public returns (bytes32 requestId) {
+   /* function getRandomNumber(uint256 userProvidedSeed) public returns (bytes32 requestId) {
         require(LINK.balanceOf(address(this)) > fee, "Not enough LINK - fill contract with faucet");
         return requestRandomness(keyHash, fee, userProvidedSeed);
     }
@@ -45,7 +45,7 @@ contract RandomNumberConsumer is VRFConsumerBase {
     /**
      * Callback function used by VRF Coordinator
      */
-    function fulfillRandomness(bytes32 requestId, uint256 randomness) internal {
+   /* function fulfillRandomness(bytes32 requestId, uint256 randomness) internal {
         randomResult = randomness;
     }
     
@@ -55,7 +55,7 @@ contract RandomNumberConsumer is VRFConsumerBase {
      * DO NOT USE THIS IN PRODUCTION AS IT CAN BE CALLED BY ANY ADDRESS.
      * THIS IS PURELY FOR EXAMPLE PURPOSES.
      */
-    function withdrawLink() external {
+  /*  function withdrawLink() external {
         require(LINK.transfer(msg.sender, LINK.balanceOf(address(this))), "Unable to transfer");
-    }
+    }*/
 }
